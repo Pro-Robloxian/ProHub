@@ -1,0 +1,216 @@
+print("Pro Hub doesn't support this game still yet!")
+
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))() --someone reuploaded it so I put it in place of the original back up so guy can get free credit.
+local venyx = library.new("Pro Hub", 5013109572)
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
+
+-- themes
+local themes = {
+Background = Color3.fromRGB(24, 24, 24),
+Glow = Color3.fromRGB(0, 0, 0),
+Accent = Color3.fromRGB(10, 10, 10),
+LightContrast = Color3.fromRGB(20, 20, 20),
+DarkContrast = Color3.fromRGB(14, 14, 14),
+TextColor = Color3.fromRGB(255, 255, 255)
+}
+
+local Info = venyx:addPage("Info", 5012544693)
+
+local HubInfo = Info:addSection("Hub Info")
+
+HubInfo:addButton("Pro Hub", function()
+    setclipboard("Pro Hub")
+end)
+
+HubInfo:addButton("Made By: Pro Robloxian", function()
+    setclipboard("Made By: Pro Robloxian")
+end)
+
+local GameInfo = Info:addSection("Game Info")
+
+GameInfo:addButton("Game Name: " .. GameName.Name, function()
+    setclipboard(GameName.Name)
+end)
+
+GameInfo:addButton("Game Id: " .. tostring(game.PlaceId), function()
+    setclipboard(tostring(game.PlaceId))
+end)
+
+local PlayerInfo = Info:addSection("Player Info")
+
+PlayerInfo:addButton("Name: " .. game.Players.LocalPlayer.Name, function()
+    setclipboard(game.Players.LocalPlayer.Name)
+end)
+
+PlayerInfo:addButton("Player Id: " .. tostring(game.Players.LocalPlayer.UserId), function()
+    setclipboard(tostring(game.Players.LocalPlayer.UserId))
+end)
+
+PlayerInfo:addButton("Account Age: " .. tostring(game.Players.LocalPlayer.AccountAge) .. " Days", function()
+    setclipboard( tostring(game.Players.LocalPlayer.AccountAge) )
+end)
+
+local player = game.Players.LocalPlayer
+local months = {
+    "Jan", "Feb", "Mar", "Apr",
+    "May", "Jun", "Jul", "Aug",
+    "Sep", "Oct", "Nov", "Dec"
+}
+local secondsExisted = player.AccountAge * 86400
+local dateObject = os.date("!*t", os.time() - secondsExisted)
+--print("Joined Roblox: " ..months[dateObject.month].." "..dateObject.day..", "..dateObject.year)
+PlayerInfo:addButton("Joined Roblox: " ..months[dateObject.month].." "..dateObject.day..", "..dateObject.year, function()
+    setclipboard(months[dateObject.month].." "..dateObject.day..", "..dateObject.year)
+end)
+
+
+local Mics = venyx:addPage("Mics", 5012544693)
+
+local localplayer = Mics:addSection("Local Player")
+
+localplayer:addButton("Anti-Afk", function()
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+end)
+
+localplayer:addButton("Anti-Lag", function()
+    workspace:FindFirstChildOfClass('Terrain').WaterWaveSize = 0
+    workspace:FindFirstChildOfClass('Terrain').WaterWaveSpeed = 0
+    workspace:FindFirstChildOfClass('Terrain').WaterReflectance = 0
+    workspace:FindFirstChildOfClass('Terrain').WaterTransparency = 0
+    game:GetService("Lighting").GlobalShadows = false
+    game:GetService("Lighting").FogEnd = 9e9
+    settings().Rendering.QualityLevel = 1
+    for i,v in pairs(game:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+            v.Material = "Plastic"
+            v.Reflectance = 0
+        elseif v:IsA("Decal") then
+            v.Transparency = 1
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Lifetime = NumberRange.new(0)
+        elseif v:IsA("Explosion") then
+            v.BlastPressure = 1
+            v.BlastRadius = 1
+        end
+    end
+    for i,v in pairs(game:GetService("Lighting"):GetDescendants()) do
+        if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+            v.Enabled = false
+        end
+    end
+end)
+
+localplayer:addSlider("Walkspeed", game.Players.LocalPlayer.Character.Humanoid.WalkSpeed, 0, 500, function(value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+end)
+
+localplayer:addSlider("Jump Power", game.Players.LocalPlayer.Character.Humanoid.JumpPower, 0, 500, function(value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
+end)
+
+localplayer:addButton("Hold Ctrl to teleport", function()
+    local Plr = game:GetService("Players").LocalPlayer
+    local Mouse = Plr:GetMouse()
+    Mouse.Button1Down:connect(function()
+    if not game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then return end
+    if not Mouse.Target then return end
+    Plr.Character:MoveTo(Mouse.Hit.p)
+    end)
+end)
+
+localplayer:addButton("Infinite Jump", function()
+    local InfiniteJumpEnabled = true
+    game:GetService("UserInputService").JumpRequest:connect(function()
+       if InfiniteJumpEnabled then
+           game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+       end
+    end)
+end)
+
+localplayer:addButton("No-Clip [Press E to Toggle]", function()
+    noclip = false
+    game:GetService('RunService').Stepped:connect(function()
+    if noclip then
+    game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+    end
+    end)
+    plr = game.Players.LocalPlayer
+    mouse = plr:GetMouse()
+    mouse.KeyDown:connect(function(key)
+    if key == "e" then
+    noclip = not noclip
+    game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+    end
+    end)
+end)
+
+localplayer:addButton("Infinite Yield [Admin-Commands]", function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
+end)
+
+
+local Settings = venyx:addPage("Settings", 5012544693)
+
+local Theme = Settings:addSection("Theme")
+
+for theme, color in pairs(themes) do -- all in one theme changer, i know, im cool
+    Theme:addColorPicker(theme, color, function(color3)
+        venyx:setTheme(theme, color3)
+    end)
+end
+
+local Others = Settings:addSection("Settings")
+
+Others:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
+    venyx:toggle()
+end)
+
+Others:addButton("Destroy Gui", function()
+    game.CoreGui["Pro Hub"]:Destroy()
+end)
+
+local page = venyx:addPage("Credits", 5012544693)
+
+local Credits = page:addSection("Credits for this Hub")
+
+Credits:addButton("Name: Pro Robloxian", function()
+    setclipboard("Pro Robloxian")
+end)
+
+Credits:addButton("Discord User: Pro Robloxian#2528", function()
+    setclipboard("Pro Robloxian#2528")
+end)
+
+Credits:addButton("Thanks for using this script!", function()
+    setclipboard("Thanks for using this script!")
+end)
+
+local Links = page:addSection("Social Links")
+
+Links:addButton("Discord Server", function()
+    setclipboard("https://discord.gg/2GPdTWXNm3")
+    venyx:Notify("Discord Invite", "ProR Script's Dsicord Server link copied to clipboard!")
+end)
+
+Links:addButton("YouTube Channel", function()
+    setclipboard("https://www.youtube.com/channel/UC_aPy1EkJ4IWah25w5hpqKA?sub_confirmation=1")
+    venyx:Notify("YT Channel link", "Pro Robloxian's YT Channel link copied to clipboard!")
+end)
+
+Links:addButton("Join my discord server to report bugs or", function()
+    setclipboard("https://discord.gg/2GPdTWXNm3")
+end)
+
+Links:addButton("If you need Help with anything!", function()
+    setclipboard("https://discord.gg/2GPdTWXNm3")
+end)
+
+venyx:SelectPage(venyx.pages[1], true)
+
+venyx:Notify("Game not Supported", "Pro Hub doesn't support this game still yet!")
+end
