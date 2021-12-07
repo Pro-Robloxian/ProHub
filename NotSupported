@@ -164,6 +164,16 @@ for theme, color in pairs(themes) do -- all in one theme changer, i know, im coo
     end)
 end
 
+Theme:addButton("RGB", function()
+    local t = 5;
+    while wait() do
+        local hue = tick()% t / t
+        local color = Color3.fromHSV(hue,1,1)
+        game.CoreGui["Pro Hub"].Main.Glow.ImageColor3 = color
+        game.CoreGui["Pro Hub"].Main.TopBar.Title.TextColor3 = color
+    end
+end)
+
 local Others = Settings:addSection("Settings")
 
 Others:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
