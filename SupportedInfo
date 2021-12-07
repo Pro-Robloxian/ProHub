@@ -1,0 +1,40 @@
+local GamesSupported = Info:addSection("Supported games")
+
+local Game1 = game:GetService("MarketplaceService"):GetProductInfo(7603178367)
+local Game2 = game:GetService("MarketplaceService"):GetProductInfo(142823291)
+local Game3 = game:GetService("MarketplaceService"):GetProductInfo(7733392089)
+local Game4 = game:GetService("MarketplaceService"):GetProductInfo(7619937171)
+local Game5 = game:GetService("MarketplaceService"):GetProductInfo(6284583030)
+
+
+GamesSupported:addButton(Game1.Name, function()
+    setclipboard()
+end)
+
+GamesSupported:addButton(Game2.Name, function()
+    setclipboard()
+end)
+
+GamesSupported:addButton(Game3.Name, function()
+    setclipboard()
+end)
+
+GamesSupported:addButton(Game4.Name, function()
+    setclipboard()
+end)
+
+GamesSupported:addButton(Game5.Name, function()
+    setclipboard()
+end)
+
+
+if game.PlaceId == 7603178367 or 142823291 or 7733392089 or 7619937171 or 6284583030 then
+    GameInfo:addButton("Game Supported: Yes", function()
+        print("Game Supported: Yes")
+    end)
+elseif game.PlaceId ~= 7603178367 or 142823291 or 7733392089 or 7619937171 or 6284583030 then
+    GameInfo:addButton("Game Supported: No", function()
+        print("Game Supported: No")
+    end)
+end
+
